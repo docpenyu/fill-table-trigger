@@ -242,19 +242,33 @@ int main(int argc, char** argv)
     //              << ", slide " << avg_slide << " us"
     //              << ", total_usage " << avg_scan + avg_slide << " us" << std::endl;
     //}
+    //{
+        //char* data_copy        = new char[buffer_size];
+        //header* header_ptr     = reinterpret_cast<header*>(ptr);
+        //size_t input_data_size = header_ptr->total_size;
+        ////std::memset(data_copy, 1, input_data_size);
+        //std::chrono::steady_clock::time_point start,end;
+        //start = std::chrono::steady_clock::now();
+        //std::memcpy(data_copy, ptr, input_data_size);
+        //end = std::chrono::steady_clock::now();
+        //delete[] data_copy;
+        //size_t time_usage = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count() ;
+        //std::cout<< "std::memcpy time: "<<time_usage<<" us"<<std::endl;
+    //}
+    delete[] ptr;
     {
-        char* data_copy        = new char[buffer_size];
-        header* header_ptr     = reinterpret_cast<header*>(ptr);
-        size_t input_data_size = header_ptr->total_size;
-        //std::memset(data_copy, 1, input_data_size);
+        std::vector<std::vector<hit_desc_t>> Hits;
+        std::vector<hit_desc_t> sorted_hits;
+        create_input_Hits(Hits,hitRateHz,rowOfTable);
+        for(auto& hits : Hits)
+            sorted_hits.insert(sorted_hits.end(), hits.begin(), hits.end());
+
         std::chrono::steady_clock::time_point start,end;
         start = std::chrono::steady_clock::now();
-        std::memcpy(data_copy, ptr, input_data_size);
+        std::sort(sorted_hits.begin(), sorted_hits.end(), [](const hit_desc_t& l, const hit_desc_t& r){return l.time < r.time;});
         end = std::chrono::steady_clock::now();
-        delete[] data_copy;
         size_t time_usage = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count() ;
-        std::cout<< "std::memcpy time: "<<time_usage<<" us"<<std::endl;
+        std::cout<< "std::sort time: "<<time_usage<<" us"<<std::endl;
     }
-    delete[] ptr;
     return 0;
 }
