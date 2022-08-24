@@ -3,7 +3,7 @@
 #include "hit_desc.h"
 #include <vector>
 #include <set>
-#include <sys/time.h>
+//#include <sys/time.h>
 #include <cstdint>
 #include <cstring>
 
@@ -23,7 +23,7 @@ public:
     int runtimes;
    
 private:
-    struct timeval start,end;
+    //struct timeval start,end;
     uint64_t timeuse;
     uint64_t usetimelist[3];
     std::set<uint32_t> m_trgChannels;

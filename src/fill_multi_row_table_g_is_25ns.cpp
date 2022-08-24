@@ -1,5 +1,5 @@
 #include "fill_multi_row_table_g_is_25ns.h"
-#include <sys/time.h>
+//#include <sys/time.h>
 #include <vector>
 #include <cassert>
 #include <iostream>
@@ -16,26 +16,26 @@ FillMultiRowTable::~FillMultiRowTable()
 }
 void FillMultiRowTable::process(void*  input_data_ptr)
 {
-    gettimeofday(&start, NULL);
-    scan(input_data_ptr);
-    gettimeofday(&end, NULL);
-    timeuse = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
-    usetimelist[0] += timeuse;
+    //gettimeofday(&start, NULL);
+    //scan(input_data_ptr);
+    //gettimeofday(&end, NULL);
+    //timeuse = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
+    //usetimelist[0] += timeuse;
 
-    std::vector<uint64_t> winLeft, winRight;
-    gettimeofday(&start, NULL);
-    searchTriggerWin(winLeft, winRight);
-    gettimeofday(&end, NULL);
-    timeuse = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
-    usetimelist[1] += timeuse;
+    //std::vector<uint64_t> winLeft, winRight;
+    //gettimeofday(&start, NULL);
+    //searchTriggerWin(winLeft, winRight);
+    //gettimeofday(&end, NULL);
+    //timeuse = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
+    //usetimelist[1] += timeuse;
 
-    gettimeofday(&start, NULL);
-    clearTable();
-    gettimeofday(&end, NULL);
-    timeuse = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
-    usetimelist[2] += timeuse;
-    m_totalTrigger += winLeft.size();
-    ++runtimes;
+    //gettimeofday(&start, NULL);
+    //clearTable();
+    //gettimeofday(&end, NULL);
+    //timeuse = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
+    //usetimelist[2] += timeuse;
+    //m_totalTrigger += winLeft.size();
+    //++runtimes;
     //std::cout<<"new wcdaalg triger = "<<winLeft.size()<<std::endl;
 }
 void FillMultiRowTable::scan(void* input_data_ptr)

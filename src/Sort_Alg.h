@@ -39,7 +39,7 @@ public:
     int runtimes;
 
 private:
-    struct timeval start, end;
+    //struct timeval start, end;
     uint64_t timeuse;
     uint64_t usetimelist[4];
 

@@ -213,35 +213,35 @@ int main(int argc, char** argv)
     //              << ", slide " << avg_slide << " us"
     //              << ", total_usage " << avg_scan + avg_slide << " us" << std::endl;
     //}
-    //{
-    //    std::vector<size_t> scan, fill, slide;
-    //    for (int i = 0; i < N; ++i)
-    //    {
-    //        std::vector<uint64_t> winLeft, winRight;
-    //        std::chrono::steady_clock::time_point start, scan_over, slide_over;
-    //        start = std::chrono::steady_clock::now();
-    //        // step 1: scan raw hit data
-    //        fill_Mtable_25.scan(ptr);
-    //        scan_over = std::chrono::steady_clock::now();
-    //        // step 2: slide
-    //        fill_Mtable_25.searchTriggerWin(winLeft, winRight);
-    //        slide_over = std::chrono::steady_clock::now();
+    {
+        std::vector<size_t> scan, fill, slide;
+        for (int i = 0; i < N; ++i)
+        {
+            std::vector<uint64_t> winLeft, winRight;
+            std::chrono::steady_clock::time_point start, scan_over, slide_over;
+            start = std::chrono::steady_clock::now();
+            // step 1: scan raw hit data
+            fill_Mtable_25.scan(ptr);
+            scan_over = std::chrono::steady_clock::now();
+            // step 2: slide
+            fill_Mtable_25.searchTriggerWin(winLeft, winRight);
+            slide_over = std::chrono::steady_clock::now();
 
-    //        auto scan_usage =
-    //            std::chrono::duration_cast<std::chrono::microseconds>(scan_over - start).count();
-    //        auto slide_usage =
-    //            std::chrono::duration_cast<std::chrono::microseconds>(slide_over - scan_over).count();
+            auto scan_usage =
+                std::chrono::duration_cast<std::chrono::microseconds>(scan_over - start).count();
+            auto slide_usage =
+                std::chrono::duration_cast<std::chrono::microseconds>(slide_over - scan_over).count();
 
-    //        scan.push_back(scan_usage);
-    //        slide.push_back(slide_usage);
-    //    }
+            scan.push_back(scan_usage);
+            slide.push_back(slide_usage);
+        }
 
-    //    size_t avg_scan  = std::accumulate(scan.begin(), scan.end(), 0) / scan.size();
-    //    size_t avg_slide = std::accumulate(slide.begin(), slide.end(), 0) / slide.size();
-    //    std::cout << "fill-Mtable-25ns alg: scan " << avg_scan << " us"
-    //              << ", slide " << avg_slide << " us"
-    //              << ", total_usage " << avg_scan + avg_slide << " us" << std::endl;
-    //}
+        size_t avg_scan  = std::accumulate(scan.begin(), scan.end(), 0) / scan.size();
+        size_t avg_slide = std::accumulate(slide.begin(), slide.end(), 0) / slide.size();
+        std::cout << "fill-Mtable-25ns alg: scan " << avg_scan << " us"
+                  << ", slide " << avg_slide << " us"
+                  << ", total_usage " << avg_scan + avg_slide << " us" << std::endl;
+    }
     //{
         //char* data_copy        = new char[buffer_size];
         //header* header_ptr     = reinterpret_cast<header*>(ptr);
