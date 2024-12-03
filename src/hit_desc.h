@@ -2,9 +2,9 @@
 #define HIT_DESC_H
 
 #pragma once
- 
+
 #include <cstdint>
-#define INPUT_DATA_TIMESPAN_NS 1'000'000ULL  // nano second
+#define INPUT_DATA_TIMESPAN_NS 100'000'000ULL  // nano second
 
 struct header
 {

@@ -9,6 +9,9 @@
 #include <iostream>
 #include <limits>
 #include <cassert>
+#include <smmintrin.h>
+#include <xmmintrin.h>
+#include <emmintrin.h>
 
 //#define TIME_FRAGEMENT_LENGTH 10'000'000
 
@@ -32,6 +35,7 @@ public:
     void slide(std::vector<uint64_t> &winLeft, std::vector<uint64_t> &winRight);
     // void pack(void* input_data_ptr, std::vector<uint64_t> &winLeft, std::vector<uint64_t> &winRight);
     void fillTable(const std::vector<std::vector<hit_desc_t>> &Hits);
+    void fillTable_without_cache(const std::vector<std::vector<hit_desc_t>> &Hits);
     void clearTable();
 
     // std::vector<uint64_t> printTime();
@@ -69,6 +73,7 @@ FillTableAlg<G>::FillTableAlg(int row, uint32_t nhit)
     m_step = m_trgWin / G ; // 触发窗对应的表格宽度 100ns 对应 4 个 25ns 的格子
     m_trigerTable1 = new unsigned int[m_column + m_step]{};
     m_trigerTable2 = new unsigned int[m_column + m_step]{};
+    clearTable();
     // m_secondIndex = new unsigned int[TIME_FRAGEMENT_LENGTH/m_trgWin+1]{0};
     // std::memset(usetimelist, 0, sizeof(usetimelist));
     // std::cout<<"create the fill-table alg, g = "<<G<<std::endl;
@@ -249,6 +254,41 @@ void FillTableAlg<G>::fillTable(const std::vector<std::vector<hit_desc_t>> &Hits
             else {
                 for (size_t k = timestamp; k < timeTableNumEnd; ++k){
                     m_trigerTable2[k] += 1;
+                }
+            }
+            timestamp = timeTableNumEnd;
+        }
+    }
+}
+template<int G>
+void FillTableAlg<G>::fillTable_without_cache(const std::vector<std::vector<hit_desc_t>> &Hits)
+{
+    // 找时间起点
+    uint64_t time_begin = std::numeric_limits<uint64_t>::max();
+    for (auto&hits:Hits){
+        if (hits.size()==0)continue;
+        if (hits[0].time < time_begin)
+            time_begin = hits[0].time;
+    }
+    m_time_begin = time_begin;
+
+    uint64_t timeTableNum = 0;
+    uint64_t timeTableNumEnd = 0;
+    for (auto&hits : Hits){
+        uint64_t timestamp = 0;
+        for (auto &hit : hits){// 填表
+            timeTableNum = (hit.time - m_time_begin) / G;
+            timeTableNumEnd = timeTableNum + m_step ; // 尾后 位置
+            if (timeTableNum >= timestamp){
+                int value = m_trigerTable1[timeTableNum] + 1;
+                _mm_stream_si32((int*)(m_trigerTable1+timeTableNum),value);
+                m_trigerTable1[timeTableNum] += 1;
+            }
+            else {
+                for (size_t k = timestamp; k < timeTableNumEnd; ++k) {
+                    int value = m_trigerTable2[k] + 1;
+                    _mm_stream_si32((int*)(m_trigerTable2+k),value);
+                    // m_trigerTable2[k] += 1;
                 }
             }
             timestamp = timeTableNumEnd;
